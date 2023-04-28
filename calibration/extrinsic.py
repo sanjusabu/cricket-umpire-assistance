@@ -19,14 +19,14 @@ objp = np.resize(objp, (4,1,3))
 # print str(cv2.solvePnP(objp, imagep, mtx, dist))
 _, rvec, tvec = cv2.solvePnP(objp, imagep, mtx, dist)
 
-print str(tvec)
-print str(rvec)
+print (str(tvec))
+print (str(rvec))
 
 # Obtain camera pos
 rotM = cv2.Rodrigues(rvec)[0]
-print "rotM: "+str(rotM)
-print "\n"
-print "-rotM.T"+str(-np.matrix(rotM).T)
+print ("rotM: "+str(rotM))
+print ("\n")
+print ("-rotM.T"+str(-np.matrix(rotM).T))
 cameraPosition = -np.matrix(rotM).T * np.matrix(tvec)
 
 # Rt = cv2.Rodrigues(rvec)[0]
@@ -34,8 +34,8 @@ cameraPosition = -np.matrix(rotM).T * np.matrix(tvec)
 # R = Rt.transpose()
 # cameraPosition = -R * tvec
 
-print "Camera position:\n"
-print str(cameraPosition)
+print ("Camera position:\n")
+print (str(cameraPosition))
 
 # print "\n\nRANSAC:\n\n"
 

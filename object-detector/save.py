@@ -1,4 +1,5 @@
-from visual import *
+from vpython import *
+from vpython import materials
 import argparse
 import quadFit
 import temp1
@@ -128,13 +129,15 @@ def getBatsmanHeight():
     return height*2*0.73
 
 BATSMAN_HEIGHT = getBatsmanHeight()
-print "Batsman's height: "+str(BATSMAN_HEIGHT)
+print ("Batsman's height: "+str(BATSMAN_HEIGHT))
 
 # textFile = open("3d_debug.txt", "w")
 coord_file.close()
 
 # Draw environment
-scene1 = display(title="HawkEye View", width=1280, height=720, range=800, background=(0.2,0.2,0.2), center=(0,30,30))
+# scene1 = display(title="HawkEye View", width=1280, height=720, range=800, background=(0.2,0.2,0.2), center=(0,30,30))
+scene1 = canvas(title="HawkEye View", width=1280, height=720, range=800, background=(0.2,0.2,0.2), center=vector(0,30,30))
+
 if SHOW_3D:
     scene1.stereo = 'redblue'
 scene1.forward = (-1,-0.05,0.02)
@@ -238,7 +241,7 @@ for idx in range(num_detected_points):
     if fnum < 900:
         im = ImageGrab.grab((0,40,1280,760))
         num = '00'+repr(fnum)
-        print "Saving num: "+str(num[-3:])
+        print ("Saving num: "+str(num[-3:]))
         im.save('video/img-'+num[-3:]+'.png')
         fnum += 1
 
@@ -260,7 +263,7 @@ for idx in range(num_detected_points, len(coords_3d),20):
     if fnum < 900:
         im = ImageGrab.grab((0,40,1280,760))
         num = '00'+repr(fnum)
-        print "Saving num: "+str(num[-3:])
+        print ("Saving num: "+str(num[-3:]))
         im.save('video/img-'+num[-3:]+'.png')
         fnum += 1
 
@@ -293,7 +296,7 @@ for idx in range(num_detected_points):
 
 average_speed = average_speed*0.9/(average_length)
 
-print "Speed of delivery: {:.3f} km/h".format(average_speed)
+print ("Speed of delivery: {:.3f} km/h".format(average_speed))
 
 
 """ Umpiring decisions below """
@@ -371,36 +374,36 @@ def check_lbw():
     if bouncing_pt_idx != -1 and final_coords_3d[bouncing_pt_idx][2] <= WICKET_WIDTH/2:
         if final_coords_3d[bouncing_pt_idx][2] >= -WICKET_WIDTH/2:
             decision['pitching'] = "INSIDE"
-            print "PITCHING: INSIDE IMACT ZONE"
+            print ("PITCHING: INSIDE IMACT ZONE")
         else:
             decision['pitching'] = "OUTSIDE OFF"
-            print "PITCHING: OUTSIDE OFF"
+            print ("PITCHING: OUTSIDE OFF")
         # Check if last point in impact zone
         if final_coords_3d[num_detected_points-1][2] >= -(WICKET_WIDTH/2+BALL_RADIUS) and final_coords_3d[num_detected_points-1][2] <= (WICKET_WIDTH/2+BALL_RADIUS):
             decision['impact'] = "IN-LINE"
-            print "IMPACT: IN-LINE"
+            print ("IMPACT: IN-LINE")
             return check_nearest_coord(near_wicket_idx, min_diff, before_wicket_idx)
         else:
             decision['impact'] = "OUTSIDE"
-            print "IMPACT: OUTSIDE"
+            print ("IMPACT: OUTSIDE")
             return False
     # No bounce point found
     elif bouncing_pt_idx == -1:
         decision['pitching'] = "DID NOT BOUNCE"
-        print "PITCHING: DID NOT BOUNCE"
+        print ("PITCHING: DID NOT BOUNCE")
         if final_coords_3d[num_detected_points-1][2] >= -(WICKET_WIDTH/2+BALL_RADIUS) and final_coords_3d[num_detected_points-1][2] <= (WICKET_WIDTH/2+BALL_RADIUS):
             decision['impact'] = "IN-LINE"
-            print "IMPACT: IN-LINE"
+            print ("IMPACT: IN-LINE")
             return check_nearest_coord(near_wicket_idx, min_diff, before_wicket_idx)
         else:
             decision['impact'] = "OUTSIDE"
-            print "IMPACT: OUTSIDE"
+            print ("IMPACT: OUTSIDE")
             return False
     # Bounce out of impact zone
     else:
         decision['pitching'] = "OUTSIDE LEG"
         decision['impact'] = "OUTSIDE"
-        print "PITCHING: OUTSIDE LEG"
+        print ("PITCHING: OUTSIDE LEG")
         return False
 
 def check_nearest_coord(idx, min_diff, before_wicket_idx):
@@ -418,12 +421,12 @@ def check_nearest_coord(idx, min_diff, before_wicket_idx):
 if check_lbw():
     decision['lbw'] = "OUT"
     decision['wickets'] = "HITTING"
-    print "WICKETS: HITTING"
+    print ("WICKETS: HITTING")
     # print "\nLBW DECISION: OUT"
 else:
     decision['lbw'] = "NOT OUT"
     decision['wickets'] = "NOT HITTING"
-    print "WICKETS: NOT HITTING"
+    print ("WICKETS: NOT HITTING")
     # print "\nLBW DECISION: NOT OUT"
 
 # Check Wide Decision
@@ -449,10 +452,10 @@ def check_wide():
         return False
 
 if check_wide():
-    print "\nWIDE DECISION: WIDE"
+    print ("\nWIDE DECISION: WIDE")
     decision['wide'] = "WIDE"
 else:
-    print "\nWIDE DECISION: NOT WIDE"
+    print ("\nWIDE DECISION: NOT WIDE")
     decision['wide'] = "NOT WIDE"
 
 # Check Bouncer Decision
@@ -479,10 +482,10 @@ def check_bouncer():
 
 if check_bouncer():
     decision['bouncer'] = "BOUNCER"
-    print "\nBOUNCER DECISION: BOUNCER"
+    print ("\nBOUNCER DECISION: BOUNCER")
 else:
     decision['bouncer'] = "NOT A BOUNCER"
-    print "\nBOUNCER DECISION: NOT A BOUNCER"
+    print ("\nBOUNCER DECISION: NOT A BOUNCER")
 
 
 # Check No Ball Decision
@@ -509,10 +512,10 @@ def check_noball():
 
 if check_noball():
     decision['noball'] = "NO BALL"
-    print "\nNO BALL DECISION: NO BALL"
+    print ("\nNO BALL DECISION: NO BALL")
 else:
     decision['noball'] = "NOT A NO BALL"
-    print "\nNO BALL DECISION: NOT A NO BALL"
+    print ("\nNO BALL DECISION: NOT A NO BALL")
 
 # Add decision headings to adjust text length
 decision['lbwheading'] = "LBW DECISION"
@@ -574,7 +577,7 @@ if SHOW_LABELS:
 # Save final frame with displays
 im = ImageGrab.grab((0,40,1280,760))
 num = '00'+repr(fnum)
-print "Saving num: "+str(num[-3:])
+print ("Saving num: "+str(num[-3:]))
 im.save('video/img-'+num[-3:]+'.png')
 fnum += 1
 call("ffmpeg -r 30 -i video/img-%3d.png -vcodec libx264 -vf format=yuv420p -y video/movie.mp4")

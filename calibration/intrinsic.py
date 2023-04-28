@@ -22,7 +22,10 @@ count = 0
 images.sort()
 
 for fname in images:
-    print "Reading image: "+str(fname)
+    # print "Reading image: "+str(fname)
+    # make the above print statement work in python 3
+    print("Reading image: "+str(fname))
+
     count += 1
     img = cv2.imread(fname)
     gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
@@ -48,11 +51,11 @@ cv2.destroyAllWindows()
 
 ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
 
-print "ret: "+str(ret)
-print "mtx: "+str(mtx)
-print "dist: "+str(dist)
-# print "rvecs: "+str(rvecs)
-# print "tvecs: "+str(tvecs)
+print("ret: "+str(ret))
+print("mtx: "+str(mtx))
+print ("dist: "+str(dist))
+print("rvecs: "+str(rvecs))
+print("tvecs: "+str(tvecs))
 
 np.save('parameters_intrinsic', (mtx, dist[0]))
 # mtx, dist = np.load('parameters_intrinsic.npy')   # To load from the saved parameters file

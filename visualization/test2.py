@@ -2,9 +2,11 @@
 # -----------------------------------------------------------------------
 
 from __future__ import division
-from visual import *
+from vpython import *
 from physutil import *
-from visual.graph import *
+# how to import from physutil:
+
+# from visual.graph import *
 
 ### SETUP ELEMENTS FOR GRAPHING, SIMULATION, VISUALIZATION, TIMING
 # ------------------------------------------------------------------------
@@ -21,6 +23,8 @@ ball = sphere(radius = 5, color = color.blue)
 
 # Define axis marks the field with a specified number of tick marks
 xaxis = PhysAxis(field, 10) # 10 tick marks
+            
+
 yaxis = PhysAxis(field, 5, # 5 tick marks
     axisType = "y",
     labelOrientation = "left",
@@ -35,6 +39,7 @@ trail = curve(color = color.yellow, radius = 1) # units are in meters
 
 # Set up motion map for ball
 motionMap = MotionMap(ball, 8.163, # expected end time in seconds
+                      # What module does MotiontMap belong to?
     10, # number of markers to draw
     labelMarkerOffset = vector(0, -20, 0),
     dropTime = False)
@@ -90,5 +95,5 @@ while ball.pos.y >= 0 :  #while the ball's y-position is greater than 0 (above t
 # --------------------------------------------------------------------------------------
 
 # Print the final time and the ball's final position
-print t
-print ball.pos
+print (t)
+print (ball.pos)

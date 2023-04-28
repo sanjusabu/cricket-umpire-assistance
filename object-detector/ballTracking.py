@@ -34,7 +34,7 @@ bowling_attack = int(args["attack"])
 show_slide = int(args["sliding"])
 arg_first_frame = int(args["first"])
 # Number of frames to skip after initial movement detected
-SKIP = 45
+SKIP = 0
 
 if bowling_attack:
     SKIP = 65
@@ -47,7 +47,7 @@ if bowling_attack:
     DURATION = 80
 
 rejected_radius = []
-
+check =0 
 def findRadius(frame, window_x, window_y, frame_no):
 
     """Function to find radius of the detected ball"""
@@ -149,7 +149,7 @@ def findRadius(frame, window_x, window_y, frame_no):
     circleIndex = 0
     for i,j in enumerate(contours):
         if(len(j)>len(contours[circleIndex])):
-            circleIndex = i;
+            circleIndex = i
                 
     # centre_X,centre_Y,radius = findAppropriateCircle(contours[circleIndex])
     (centre_X,centre_Y),radius = cv2.minEnclosingCircle(contours[circleIndex])
@@ -188,8 +188,9 @@ if bowling_attack < 2:
         # Grab a frame and take difference from prev frame
         (grabbed1, frame1) = camera.read()
         frame_no += 1
+        print(frame_no)
         if not grabbed1:
-            print "Unable to grab frame: "+str(frame_no)
+            print ("Unable to grab frame: "+str(frame_no))
             break
 
         gray1 = cv2.cvtColor(prev, cv2.COLOR_BGR2GRAY)
@@ -256,7 +257,7 @@ while True:
     (grabbed1, frame1) = camera.read()
 
     if not grabbed1:
-        print "Unable to grab frame: "+str(frame_no)
+        print ("Unable to grab frame: "+str(frame_no))
         break
 
     gray_image_1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
@@ -300,7 +301,7 @@ while True:
     (grabbed1, frame1) = camera.read()
     frame_no += 1
     if not grabbed1:
-        print "Unable to grab frame: "+str(frame_no)
+        print ("Unable to grab frame: "+str(frame_no))
         break
 
     if frame_no > initial_frame + DURATION:
@@ -502,3 +503,5 @@ Coordinates_file.close()
 
 # Close any open windows
 cv2.destroyAllWindows()
+
+#hello

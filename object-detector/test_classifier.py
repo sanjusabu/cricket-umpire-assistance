@@ -25,8 +25,9 @@ def sliding_window(image, window_size, step_size):
     * y is the top-left y co-ordinate
     * im_window is the sliding window image
     '''
-    for y in xrange(0, image.shape[0], step_size[1]):
-        for x in xrange(0, image.shape[1], step_size[0]):
+    for y in range(0, image.shape[0], step_size[1]):
+        # what is xrange? https://stackoverflow.com/questions/94935/what-is-the-difference-between-range-and-xrange-functions-in-python-2-x
+        for x in range(0, image.shape[1], step_size[0]):
             yield (x, y, image[y:y + window_size[1], x:x + window_size[0]])
 
 if __name__ == "__main__":
@@ -69,16 +70,18 @@ if __name__ == "__main__":
             fd = hog(im_window, orientations, pixels_per_cell, cells_per_block, visualize, normalize)
             pred = clf.predict(fd)
             if pred == 1:
-                print  "Detection:: Location -> ({}, {})".format(x, y)
-                print "Scale ->  {} | Confidence Score {} \n".format(scale,clf.decision_function(fd))
+                print  ("Detection:: Location -> ({}, {})".format(x, y))
+                print ("Scale ->  {} | Confidence Score {} \n".format(scale,clf.decision_function(fd)))
                 
 		
                 if clf.decision_function(fd) > 1.3:
-                	text_file.write("Scale ->  {} | Confidence Score {} \n".format(scale,clf.decision_function(fd)))
-	                detections.append((x, y, clf.decision_function(fd),
-	                    int(min_wdw_sz[0]*(downscale**scale)),
-	                    int(min_wdw_sz[1]*(downscale**scale))))
-	                cd.append(detections[-1])
+                    text_file.write("Scale ->  {} | Confidence Score {} \n".format(scale,clf.decision_function(fd)))
+                        #fix the indunation
+                        
+                    detections.append((x, y, clf.decision_function(fd),
+                        int(min_wdw_sz[0]*(downscale**scale)),
+                        int(min_wdw_sz[1]*(downscale**scale))))
+                    cd.append(detections[-1])
             # If visualize is set to true, display the working
             # of the sliding window
         	

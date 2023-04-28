@@ -191,7 +191,7 @@ if bowling_attack < 2:
         (grabbed1, frame1) = camera.read()
         frame_no += 1
         if not grabbed1:
-            print "Unable to grab frame: "+str(frame_no)
+            print ("Unable to grab frame: "+str(frame_no))
             break
 
         gray1 = cv2.cvtColor(prev, cv2.COLOR_BGR2GRAY)
@@ -258,7 +258,7 @@ while True:
     (grabbed1, frame1) = camera.read()
 
     if not grabbed1:
-        print "Unable to grab frame: "+str(frame_no)
+        print ("Unable to grab frame: "+str(frame_no))
         break
 
     gray_image_1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
@@ -302,7 +302,7 @@ while True:
     (grabbed1, frame1) = camera.read()
     frame_no += 1
     if not grabbed1:
-        print "Unable to grab frame: "+str(frame_no)
+        print ("Unable to grab frame: "+str(frame_no))
         break
 
     if frame_no > initial_frame + DURATION:
@@ -376,7 +376,7 @@ while True:
     # crop_img = gray_image_1
 
 
-    print "Analyzing frame: "+str(frame_no)
+    print ("Analyzing frame: "+str(frame_no))
     # Image sent to detector.py to get ball coordinates
     current_ballPos_temp = detector.find(crop_img, step_size,threshold,img_copy_1,x1,y1,x2,y2,show_slide)
     
