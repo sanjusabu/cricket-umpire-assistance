@@ -7,8 +7,11 @@ import cv2
 import argparse as ap
 from nms import nms
 from config import *
-
+model_path = './data/models/svm.model'
+# model_path1 = '../data/models/a.py'
 DEBUG_VISUALIZE = True
+from sklearn import svm
+
 
 def sliding_window(image, window_size, step_size):
     for y in range(0, image.shape[0], step_size[1]):
@@ -24,7 +27,7 @@ def find(im, step_size, threshold,full_image,x_start,y_start,x_end,y_end,show_sl
 
     # Load the classifier
     clf = joblib.load(model_path)
-
+    # clf = svm.SVC()
     # List to store the detections
     detections = []
     # The current scale of the image
@@ -37,7 +40,8 @@ def find(im, step_size, threshold,full_image,x_start,y_start,x_end,y_end,show_sl
         if im_window.shape[0] != min_wdw_sz[1] or im_window.shape[1] != min_wdw_sz[0]:
             continue
         # Calculate the HOG features
-        fd = hog(im_window, orientations, pixels_per_cell, cells_per_block, visualize, normalize)
+        fd = hog(im_window,orientations=9,pixels_per_cell=(8,8),cells_per_block=(2,2),block_norm='L2-Hys',visualize=False,transform_sqrt=False,feature_vector=True)
+
         pred = clf.predict(fd)
         if pred == 1 and clf.decision_function(fd) > threshold:
             detections.append((x,y,clf.decision_function(fd),step_size[0],step_size[1]))
