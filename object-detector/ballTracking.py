@@ -37,14 +37,14 @@ arg_first_frame = int(args["first"])
 SKIP = 0
 
 if bowling_attack:
-    SKIP = 65
+    SKIP = 0
 
 # Number of frames to detect after ball detection
-DURATION = 50
+DURATION = 200
 
 # If bowling attack is spin then increase the number of frames 
-if bowling_attack:
-    DURATION = 80
+# if bowling_attack:
+#     DURATION = 80
 
 rejected_radius = []
 check =0 
@@ -78,7 +78,9 @@ def findRadius(frame, window_x, window_y, frame_no):
     avg_color_ball = 0.0
     for dx in range(1,6):
         for dy in range(1,6):
-            avg_color_ball += blurredFrame[frame_center_y+dy][frame_center_x+dx]
+            # avg_color_ball += blurredFrame[frame_center_y+dy][frame_center_x+dx]
+            avg_color_ball += blurredFrame[int(frame_center_y+dy)][int(frame_center_x+dx)]
+
     avg_color_ball /= 25.0
 
     # Checks if any points has to be rejected based on below params
@@ -109,8 +111,13 @@ def findRadius(frame, window_x, window_y, frame_no):
                 blurredFrame[i][j]=MIN_INTENSITY
     # cv2.imshow("Tracked Ball",blurredFrame)
 
-    _,contours,_ = cv2.findContours(blurredFrame,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
-    cv2.drawContours(blurredFrame, contours, -1, (255,0,0), 1)
+    contours,_ = cv2.findContours(blurredFrame,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
+    if len(contours) > 0:
+        print(contours)
+        cv2.drawContours(blurredFrame, contours, -1, (255,0,0), 1)
+    else:
+        print("No contours found")
+
     # cv2.imshow("Contours", blurredFrame)
 
     centre_X = 0
@@ -189,7 +196,7 @@ if bowling_attack < 2:
         # Grab a frame and take difference from prev frame
         (grabbed1, frame1) = camera.read()
         frame_no += 1
-        print(frame_no)
+        # print(frame_no)
         if not grabbed1:
             print ("Unable to grab frame: "+str(frame_no))
             break
@@ -267,7 +274,7 @@ while True:
 
     # Image sent to detector.py to get ball coordinates
     current_ballPos_temp = detector.find(crop_img, step_size, threshold,gray_image_1,x_start,y_start,x_end, y_end)
-    
+    print(current_ballPos_temp)
     # If ball coordinate is not (0,0), it means ball has been detected
     if(not(current_ballPos_temp[0] == 0 and current_ballPos_temp[1] == 0)):
         # Calculate coordinates according to full frame (1080*720) by adding ball coordinates to focussed window coordinates 
@@ -311,6 +318,7 @@ while True:
 
     # cv2.imshow("Current Grabbed Frame",frame1)
     last_frame = frame1
+    print(last_frame)
     gray_image_1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
     img_copy = gray_image_1.copy()
     img_copy_1 = gray_image_1.copy()
@@ -380,7 +388,7 @@ while True:
     
     # Image sent to detector.py to get ball coordinates
     current_ballPos_temp = detector.find(crop_img, step_size,threshold,img_copy_1,x1,y1,x2,y2,show_slide)
-    
+    print(current_ballPos_temp)
     # If not detected
     if(current_ballPos_temp[0] == 0 and current_ballPos_temp[1] == 0):
         stop_search = stop_search + 1
