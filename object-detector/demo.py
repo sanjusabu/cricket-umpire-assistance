@@ -17,7 +17,7 @@ from imutils import paths
 DEBUG_VISUALIZE = True
 
 # Coordinates file
-# Coordinates_file = open("coordinates.txt", "w")
+Coordinates_file = open("coordinates.txt", "w")
 Textlines = []
 # Warning filter
 warnings.filterwarnings("ignore")
@@ -67,7 +67,7 @@ def findRadius(frame, window_x, window_y, frame_no):
     frame = clahe.apply(frame)
 
     blurredFrame = cv2.GaussianBlur(frame,(5,5),0)
-    # cv2.imshow("Blurred Frame", blurredFrame)
+    cv2.imshow("Blurred Frame", blurredFrame)
 
     height, width = blurredFrame.shape[:2]
     frame_center_x = width/2
@@ -109,11 +109,11 @@ def findRadius(frame, window_x, window_y, frame_no):
                 blurredFrame[i][j]=MAX_INTENSITY
             else:
                 blurredFrame[i][j]=MIN_INTENSITY
-    # cv2.imshow("Tracked Ball",blurredFrame)
+    cv2.imshow("Tracked Ball",blurredFrame)
 
     _,contours,_ = cv2.findContours(blurredFrame,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
     cv2.drawContours(blurredFrame, contours, -1, (255,0,0), 1)
-    # cv2.imshow("Contours", blurredFrame)
+    cv2.imshow("Contours", blurredFrame)
 
     centre_X = 0
     centre_Y = 0

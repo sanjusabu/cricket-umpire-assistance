@@ -180,7 +180,8 @@ if bowling_attack < 2:
     x_start = 0
     x_end = 1080 
         
-    (grabbed1, prev) = camera.read()
+    grabbed1, prev = camera.read()
+    # cv2.imshow('previous image ',prev)
     while True:
         """
             Captures the frame in which bowler starts to bowl
@@ -254,8 +255,8 @@ while True:
     """
 
     # Grab frames one by one, modify it and send it to detector.py
-    (grabbed1, frame1) = camera.read()
-
+    grabbed1, frame1 = camera.read()
+    # cv2.imshow('frame1 - ',frame1)
     if not grabbed1:
         print ("Unable to grab frame: "+str(frame_no))
         break
@@ -298,11 +299,12 @@ while True:
         Windowing technique, search around the ball detected in previous frame
     """
 
-    (grabbed1, frame1) = camera.read()
+    grabbed1, frame1 = camera.read()
     frame_no += 1
     if not grabbed1:
         print ("Unable to grab frame: "+str(frame_no))
-        break
+        # break               #commented out break as the code directly goes out of the loop and hence all the other factors are not being recognised when called  
+     
 
     if frame_no > initial_frame + DURATION:
         break
@@ -325,7 +327,6 @@ while True:
     # fairly large overlap threshold to try to maintain overlapping
     # boxes that are still people
     rects = np.array([[x, y, x + w, y + h] for (x, y, w, h) in rects])
-
     if len(rects) > 0:
         pick = non_max_suppression(rects, probs=None, overlapThresh=0.65)
         xmid = 0
@@ -358,6 +359,7 @@ while True:
     #     y1 = current_ballPos[1] - 150
     #     y2 = current_ballPos[1] + 150
     # else:
+
     x1 = current_ballPos[0] - 50
     x2 = current_ballPos[0] + 100
     y1 = current_ballPos[1] - 50
