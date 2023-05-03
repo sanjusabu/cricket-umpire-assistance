@@ -61,6 +61,7 @@ if __name__ == "__main__":
 
         fd_name = os.path.split(im_path)[1].split(".")[0] + ".feat"
         fd_path = os.path.join(neg_feat_ph, fd_name)
+        print(fd_path)
         joblib.dump(fd, fd_path)
     print ("Negative features saved in {}".format(neg_feat_ph))
 

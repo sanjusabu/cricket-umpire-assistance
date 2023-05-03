@@ -7,7 +7,7 @@ import cv2
 import argparse as ap
 from nms import nms
 from config import *
-model_path = './data/models/svm.model'
+model_path = './data/models/newsvm.model'
 # model_path1 = '../data/models/a.py'
 DEBUG_VISUALIZE = True
 from sklearn import svm
@@ -41,8 +41,10 @@ def find(im, step_size, threshold,full_image,x_start,y_start,x_end,y_end,show_sl
             continue
         # Calculate the HOG features
         fd = hog(im_window,orientations=9,pixels_per_cell=(8,8),cells_per_block=(2,2),block_norm='L2-Hys',visualize=False,transform_sqrt=False,feature_vector=True)
-
+        # print(fd.shape)
+        fd = fd.reshape(1, -1)
         pred = clf.predict(fd)
+        print(pred)
         if pred == 1 and clf.decision_function(fd) > threshold:
             detections.append((x,y,clf.decision_function(fd),step_size[0],step_size[1]))
             cd.append(detections[-1])
@@ -61,6 +63,8 @@ def find(im, step_size, threshold,full_image,x_start,y_start,x_end,y_end,show_sl
     clone = im.copy()
     final = (0,0,0,0,0)
     for (x_tl, y_tl, confidence, w, h) in detections:
+        print(confidence,"confidence")
+        print(final[2],"final")
         if confidence > final[2]:
             final = (x_tl,y_tl,confidence,w,h)
     # cv2.rectangle(im, (final[0], final[1]), (final[0]+50, final[1]+50), (0, 0, 0), thickness=2)
