@@ -1,16 +1,18 @@
 # Import the functions to calculate feature descriptors
-from skimage.feature import local_binary_pattern
 from skimage.feature import hog
-from skimage.io import imread
-from sklearn.externals import joblib
 # To read file names
+import joblib
 import argparse as ap
 import glob
 import os
 from config import *
+import sys
+import numpy as np
+sys.modules['sklearn.externals.joblib'] = joblib
+import cv2 as cv
 # import features directory from data directory
-pos_feat_ph = "../data/features/pos"
-neg_feat_ph = "../data/features/neg"
+pos_feat_ph = "./data/features/pos"
+neg_feat_ph = "./data/features/neg"
 
 if __name__ == "__main__":
     # Argument Parser
@@ -38,10 +40,13 @@ if __name__ == "__main__":
 
     print ("Calculating the descriptors for the positive samples and saving them")
     for im_path in glob.glob(os.path.join(pos_im_path, "*")):
-        im = imread(im_path, as_grey=True)
+        # convert to gray scale
+        im = cv.imread(im_path)
+        im = cv.cvtColor(im, cv.COLOR_BGR2GRAY)
         if des_type == "HOG":
             fd = hog(im,orientations=9,pixels_per_cell=(8,8),cells_per_block=(2,2),block_norm='L2-Hys',visualize=False,transform_sqrt=False,feature_vector=True)
-
+        print(fd)
+        # print(im_path)
         fd_name = os.path.split(im_path)[1].split(".")[0] + ".feat"
         fd_path = os.path.join(pos_feat_ph, fd_name)
         joblib.dump(fd, fd_path)
@@ -49,7 +54,8 @@ if __name__ == "__main__":
 
     print ("Calculating the descriptors for the negative samples and saving them")
     for im_path in glob.glob(os.path.join(neg_im_path, "*")):
-        im = imread(im_path, as_grey=True)
+        im = cv.imread(im_path)
+        im = cv.cvtColor(im, cv.COLOR_BGR2GRAY)      
         if des_type == "HOG":
             fd = hog(im,orientations=9,pixels_per_cell=(8,8),cells_per_block=(2,2),block_norm='L2-Hys',visualize=False,transform_sqrt=False,feature_vector=True)
 
@@ -59,3 +65,4 @@ if __name__ == "__main__":
     print ("Negative features saved in {}".format(neg_feat_ph))
 
     print ("Completed calculating features from training images")
+    
