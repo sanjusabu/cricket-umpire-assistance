@@ -41,14 +41,16 @@ if __name__ == "__main__":
     args = vars(parser.parse_args())
 
     # Read the image
-    im = imread(args["image"], as_grey=True)
+    # im = imread(args["image"], as_grey=True)
+    im = cv2.imread(args["image"])
+    im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
     min_wdw_sz = (50, 50)
     step_size = (5, 5)
     downscale = args['downscale']
     visualize_det = args['visualize']
 
     # Load the classifier
-    clf = joblib.load(model_path)
+    clf = joblib.load("./data/models/newsvm.model")
     text_file = open("Output.txt", "w")
 	
     # List to store the detections
@@ -67,7 +69,9 @@ if __name__ == "__main__":
             if im_window.shape[0] != min_wdw_sz[1] or im_window.shape[1] != min_wdw_sz[0]:
                 continue
             # Calculate the HOG features
-            fd = hog(im_window, orientations, pixels_per_cell, cells_per_block, visualize, normalize)
+            fd = hog(im_window, orientations=9, pixels_per_cell =(8,8), cells_per_block= (3,3), visualize= False)
+            fd = fd[0:900]
+            fd = fd.reshape(1, -1)
             pred = clf.predict(fd)
             if pred == 1:
                 print  ("Detection:: Location -> ({}, {})".format(x, y))
@@ -109,7 +113,8 @@ if __name__ == "__main__":
     cv2.waitKey()
 
     # Perform Non Maxima Suppression
-    detections = nms(detections, threshold)
+    detections = nms(detections, threshold=0.3)
+    print(detections)
     text_file.close()
     # Display the results after performing NMS
     for (x_tl, y_tl, _, w, h) in detections:
